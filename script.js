@@ -68,18 +68,41 @@ function processExcel(file, baseName) {
     reader.onload = function (event) {
         const data = new Uint8Array(event.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
+
         workbook.SheetNames.forEach((sheetName) => {
             const sheet = workbook.Sheets[sheetName];
-            const csv = XLSX.utils.sheet_to_csv(sheet);
-            const rows = csv.split('\n');
+            const range = XLSX.utils.decode_range(sheet['!ref']); // Mendapatkan range data di sheet
 
-            // Buat tombol untuk setiap kolom
-            rows.forEach((row, index) => {
-                if (row.trim() !== '') {
-                    const fileName = `${baseName}_${sheetName}_Kolom_${index + 1}.txt`;
-                    createDownloadButton(fileName, row);
+            let hasData = false; // Flag untuk cek jika kolom memiliki data
+
+            // Untuk setiap kolom dalam sheet, kita akan membuat file terpisah
+            for (let colIndex = range.s.c; colIndex <= range.e.c; colIndex++) {
+                const colLetter = XLSX.utils.encode_col(colIndex); // Mendapatkan nama kolom (A, B, C, ...)
+                const columnData = [];
+
+                // Ambil data dari kolom
+                for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex++) {
+                    const cell = sheet[XLSX.utils.encode_cell({ r: rowIndex, c: colIndex })];
+                    if (cell && cell.v !== undefined) {
+                        columnData.push(cell.v);
+                    }
                 }
-            });
+
+                // Jika kolom memiliki data, buat file dan tombol download
+                if (columnData.length > 0) {
+                    const fileContent = columnData.join('\n');
+                    const fileName = `${baseName}_${sheetName}_Kolom_${colLetter}.txt`;
+
+                    // Buat tombol untuk mendownload file yang baru
+                    createDownloadButton(fileName, fileContent);
+                    hasData = true; // Menandakan ada kolom dengan data
+                }
+            }
+
+            // Jika tidak ada kolom yang memiliki data, jangan tampilkan tombol download
+            if (!hasData) {
+                console.log(`Sheet "${sheetName}" tidak memiliki data untuk dikonversi.`);
+            }
         });
     };
     reader.readAsArrayBuffer(file);
