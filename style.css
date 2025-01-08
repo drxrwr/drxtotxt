@@ -1,65 +1,55 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     margin: 0;
     padding: 0;
-    background-color: #e0ffe0;
-    color: #333;
 }
 
 .container {
-    max-width: 600px;
-    margin: 50px auto;
-    background: #fff;
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
-    color: #006400;
-}
-
-p {
-    font-size: 16px;
-    margin: 15px 0;
+    color: #4CAF50;
 }
 
 input[type="file"] {
-    display: block;
     margin: 20px 0;
 }
 
 button {
-    background-color: #008000;
+    background-color: #4CAF50;
     color: white;
-    border: none;
     padding: 10px 20px;
+    border: none;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #006400;
+    background-color: #45a049;
 }
 
-#results {
-    margin-top: 30px;
+#downloadButtons {
+    margin-top: 20px;
 }
 
-#downloadButtons button {
-    display: block;
-    margin: 10px 0;
-    width: 100%;
-    text-align: left;
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    color: black;
+.download-btn {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    margin: 5px;
     cursor: pointer;
+    display: inline-block;
 }
 
-#downloadButtons button:hover {
-    background-color: #f1f1f1;
+.download-btn:hover {
+    background-color: #007bb5;
 }
