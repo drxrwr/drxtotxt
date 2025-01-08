@@ -3,42 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload and Download</title>
-    <style>
-        body {
-            background-color: white;
-            color: black;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        #uploadContainer {
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            background-color: green;
-            color: black;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: darkgreen;
-        }
-    </style>
+    <title>File Converter</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Upload File and Get Download Links</h1>
-
-    <div id="uploadContainer">
-        <input type="file" id="fileInput" multiple />
-        <button id="processButton">Process Files</button>
+    <div class="container">
+        <h1>File Converter to TXT</h1>
+        <input type="file" id="fileUpload" multiple />
+        <div id="fileList"></div>
+        <div id="downloadButtons"></div>
     </div>
 
-    <div id="downloadButtons"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
