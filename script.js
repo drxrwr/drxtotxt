@@ -14,25 +14,28 @@ document.getElementById('processButton').addEventListener('click', () => {
         const fileReader = new FileReader();
         fileReader.onload = function (event) {
             const fileType = file.name.split('.').pop().toLowerCase();
-            let resultContent = '';
+            const baseName = file.name.replace(/\.[^/.]+$/, ''); // Nama tanpa ekstensi
 
             if (fileType === 'txt') {
-                resultContent = event.target.result; // Tidak diubah
-                createDownloadButton(file.name, resultContent);
+                // File TXT tidak diubah
+                createDownloadButton(`${baseName}.txt`, event.target.result);
 
             } else if (fileType === 'vcf') {
+                // File VCF: Ekstrak nomor telepon
                 const lines = event.target.result.split('\n');
                 const numbers = lines
                     .filter((line) => line.startsWith('TEL'))
                     .map((line) => line.split(':')[1].trim());
-                resultContent = numbers.join('\n');
-                createDownloadButton('kontak.txt', resultContent);
+                createDownloadButton(`${baseName}.txt`, numbers.join('\n'));
 
             } else if (['xlsx', 'xlsm'].includes(fileType)) {
-                processExcel(file, file.name);
+                processExcel(file, baseName);
 
             } else if (fileType === 'docx') {
-                processDocx(file, file.name);
+                processDocx(file, baseName);
+
+            } else {
+                alert(`Format file ${fileType} tidak didukung.`);
             }
         };
 
@@ -60,7 +63,7 @@ function createDownloadButton(fileName, content) {
     downloadContainer.appendChild(button);
 }
 
-function processExcel(file, originalName) {
+function processExcel(file, baseName) {
     const reader = new FileReader();
     reader.onload = function (event) {
         const data = new Uint8Array(event.target.result);
@@ -69,23 +72,27 @@ function processExcel(file, originalName) {
             const sheet = workbook.Sheets[sheetName];
             const csv = XLSX.utils.sheet_to_csv(sheet);
             const rows = csv.split('\n');
+
+            // Buat tombol untuk setiap kolom
             rows.forEach((row, index) => {
-                const fileName = `${originalName}_${sheetName}_Kolom_${index + 1}.txt`;
-                createDownloadButton(fileName, row);
+                if (row.trim() !== '') {
+                    const fileName = `${baseName}_${sheetName}_Kolom_${index + 1}.txt`;
+                    createDownloadButton(fileName, row);
+                }
             });
         });
     };
     reader.readAsArrayBuffer(file);
 }
 
-function processDocx(file, originalName) {
+function processDocx(file, baseName) {
     const reader = new FileReader();
     reader.onload = function (event) {
         mammoth
             .extractRawText({ arrayBuffer: event.target.result })
             .then((result) => {
-                const fileName = originalName.replace(/\.[^/.]+$/, '.txt');
-                createDownloadButton(fileName, result.value);
+                const fileName = `${baseName}.txt`;
+                createDownloadButton(fileName, result.value.trim());
             })
             .catch((err) => console.error(err));
     };
